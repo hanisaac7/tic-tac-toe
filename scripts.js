@@ -53,7 +53,19 @@ const gameController = (() => {
     function getCurrentPlayer() {
         return {currentPlayerName, currentPlayerMarker}
     }
-  
+    
+    function switchTurns() {
+        if (currentPlayerName == playerOne.getName()) {
+            currentPlayerName = playerTwo.getName()
+            currentPlayerMarker = playerTwo.getMarker()
+            console.log(currentPlayerName + "'s turn")
+        } else {
+            currentPlayerName = playerOne.getName()
+            currentPlayerMarker = playerOne.getMarker()
+            console.log(currentPlayerName + "'s turn")
+        }
+    }
+
     function markCell(index, currentPlayerMarker) {
         if (gameboard.getBoard()[index] == '') {
             gameboard.getBoard()[index] = currentPlayerMarker
