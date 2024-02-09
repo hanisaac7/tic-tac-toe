@@ -101,6 +101,16 @@ const checkGame = (() => {
             }
             console.log('Row: ' + row)
 
+            if (row.every((field) => field === 'X')) {
+                gameController.winnerStatus = true
+                gameController.endGame()
+                break;
+            } else if (row.every((field) => field === 'O')) {
+                gameController.winnerStatus = true
+                gameController.endGame()
+                break;
+            } else 
+
             row = []
         }
     }
@@ -114,6 +124,16 @@ const checkGame = (() => {
             }
             console.log('Column: ' + column)  
             
+            if (column.every((field) => field === 'X')) {
+                gameController.winnerStatus = true
+                gameController.endGame()
+                break;
+            } else if (column.every((field) => field === 'O')) {
+                gameController.winnerStatus = true
+                gameController.endGame()
+                break;
+            } else
+
             column = []
         }
     }  
