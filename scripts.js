@@ -88,3 +88,37 @@ const gameController = (() => {
 
     return {initialize, getCurrentPlayer, switchTurns, markCell, endGame, winnerStatus}
 })()
+
+const checkGame = (() => {
+    let boxValue = gameboard.getBoard()
+
+    function row() {
+        let row = []    
+        for (let i = 0; i < 3; i++) {
+            
+            for (let j = i * 3; j < i * 3 + 3; j++) {
+                row.push(boxValue[j])
+            }
+            console.log('Row: ' + row)
+
+            row = []
+        }
+    }
+    
+    function column() {
+        let column = []
+        for (let i = 0; i < 3; i++) {
+                
+            for (let j = i; j < i + 7; j += 3) {
+                column.push(boxValue[j])
+            }
+            console.log('Column: ' + column)  
+            
+            column = []
+        }
+    }  
+
+    
+
+    return {row, column}
+})()
