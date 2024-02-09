@@ -138,7 +138,27 @@ const checkGame = (() => {
         }
     }  
 
+    function diagonal() {
+        let diagonal = []
+        for (let i = 0; i < 2; i++) {
+            for (let j = i * 2; j < 9; j += 6){
+                diagonal.push(boxValue[j])
+            }
+            console.log('Diagonal: ' + diagonal)
+
+            if (diagonal.every((field) => field === 'X' && gameboard.copyBoard()[4] === 'X')) {
+                gameController.winnerStatus = true
+                gameController.endGame()
+                break;
+            } else if (diagonal.every((field) => field === 'O' && gameboard.copyBoard()[4] === 'O')) {
+                gameController.winnerStatus = true
+                gameController.endGame()
+                break;
+            }
+            diagonal = []
+        }
+    }
     
 
-    return {row, column}
+    return {row, column, diagonal}
 })()
