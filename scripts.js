@@ -158,7 +158,14 @@ const checkGame = (() => {
             diagonal = []
         }
     }
-    
 
-    return {row, column, diagonal}
+    function tie() {
+        if (gameController.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {
+            console.log('Tie')
+        } else if (gameController.winnerStatus = true) {
+            console.log('Game Over')
+        }
+    }
+    
+    return {row, column, diagonal, tie}
 })()
