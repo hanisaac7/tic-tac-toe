@@ -21,3 +21,20 @@ const gameboard = (() => {
     return {getBoard, copyBoard, resetBoard}
 })()
 
+const player = (name, marker) => {
+    const playerName = name
+    const playerMarker = marker
+
+    const getName = () => playerName
+    const getMarker = () => playerMarker
+
+/*  OR 
+    const getName = function() {
+        return playerName
+    }
+    const getMarker = function() {
+        return playerMarker
+    }
+*/
+    return {getMarker, getName}
+}
