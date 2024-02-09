@@ -38,3 +38,41 @@ const player = (name, marker) => {
 */
     return {getMarker, getName}
 }
+
+const gameController = (() => {
+    let currentPlayerName;
+    let currentPlayerMarker;
+    let winnerStatus = false
+
+    function initialize(player) {
+        currentPlayerName = player.getName()
+        currentPlayerMarker = player.getMarker()
+        return { currentPlayerName, currentPlayerMarker }
+    }
+
+    function getCurrentPlayer() {
+        return {currentPlayerName, currentPlayerMarker}
+    }
+  
+    function markCell(index, currentPlayerMarker) {
+        if (gameboard.getBoard()[index] == '') {
+            gameboard.getBoard()[index] = currentPlayerMarker
+            checkGame.row()
+            checkGame.column()
+            checkGame.diagonal()
+            checkGame.tie()
+            console.log(currentPlayerMarker + ' marked')
+            switchTurns()
+        } else { 
+            console.log('Already marked, try again!')
+        }
+        console.log(gameboard.copyBoard())
+    }
+
+    function endGame() {
+        console.log(currentPlayerName + " wins")
+        gameboard.resetBoard()
+    }
+
+    return {initialize, getCurrentPlayer, switchTurns, markCell, endGame, winnerStatus}
+})()
