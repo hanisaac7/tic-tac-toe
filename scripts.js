@@ -169,3 +169,14 @@ const checkGame = (() => {
     
     return {row, column, diagonal, tie}
 })()
+
+let playerOne = player('Isaac', 'X')
+let playerTwo = player('Angela', 'O')
+gameController.initialize(playerTwo)
+
+
+const display = () => {
+    function displayMarker() {
+        /* create display element on HTML or through this js method */
+    }
+}
