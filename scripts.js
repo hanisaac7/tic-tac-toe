@@ -175,8 +175,13 @@ let playerTwo = player('Angela', 'O')
 gameController.initialize(playerTwo)
 
 
-const display = () => {
-    function displayMarker() {
+const display = (() => {
+    let square = document.getElementById("square")
+    function displayMarker(index) {
         /* create display element on HTML or through this js method */
+        square.innerText = gameboard.getBoard()[index]
+        console.log(square.innerText)
     }
-}
+    console.log(square)
+    return {displayMarker}
+})()
