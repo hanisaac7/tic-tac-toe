@@ -67,7 +67,7 @@ const gameController = (() => {
     }
 
     function markCell(index, currentPlayerMarker) {
-        if (gameboard.getBoard()[index] == '') {
+        if (gameboard.getBoard()[index] === '') {
             gameboard.getBoard()[index] = currentPlayerMarker
             console.log(currentPlayerMarker + ' marked')
         } else { 
@@ -77,12 +77,13 @@ const gameController = (() => {
     }
 
     function endGame() {
-        if (winnerStatus == false) {
+        if (winnerStatus = false) {
             console.log('Nobody wins')
         } else {
             console.log(currentPlayerName + " wins")
         }
         gameboard.resetBoard()
+        winnerStatus = false
     }
 
     return {initialize, getCurrentPlayer, switchTurns, markCell, endGame, winnerStatus}
@@ -136,30 +137,28 @@ const checkGame = (() => {
     }  
 
     function diagonal() {
-        let diagonal = []
-        for (let i = 0; i < 2; i++) {
-            for (let j = i * 2; j < 9; j += 6){
-                diagonal.push(boxValue[j])
-            }
+        let diagonalOne = []
+        let diagonalTwo = []
 
-            if (diagonal.every((field) => field === 'X' && gameboard.copyBoard()[4] === 'X')) {
-                gameController.winnerStatus = true
-                gameController.endGame()
-                break;
-            } else if (diagonal.every((field) => field === 'O' && gameboard.copyBoard()[4] === 'O')) {
-                gameController.winnerStatus = true
-                gameController.endGame()
-                break;
-            }
-            diagonal = []
+        for (let i = 0; i < 9; i += 4) {
+            diagonalOne.push(boxValue[i])
+        } 
+        for (let i = 2; i < 7; i += 2) {
+            diagonalTwo.push(boxValue[i])
+        }
+        
+        if (diagonalOne.every((field) => field === 'X')) {
+            gameController.winnerStatus = true
+            gameController.endGame()
+        } else if (diagonalOne.every((field) => field === 'O')) {
+            gameController.winnerStatus = true
+            gameController.endGame()
         }
     }
 
     function tie() {
         if (gameController.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {
             console.log('Tie')
-        } else if (gameController.winnerStatus === true) {
-            console.log('Game Over')
         }
     }
     
@@ -170,7 +169,7 @@ const checkGame = (() => {
         tie()
     }
     
-    return {check}
+    return {check, diagonal}
 })()
 
 let playerOne = player('Isaac', 'X')
@@ -181,6 +180,7 @@ gameController.initialize(playerTwo)
 const display = (() => {
     let squares = document.querySelectorAll(".square")
     let reset = document.getElementById('reset')
+
     squares.forEach((square, index) => {
         square.addEventListener('click', () => {
             gameController.markCell(index, gameController.getCurrentPlayer().currentPlayerMarker)
