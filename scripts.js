@@ -1,7 +1,7 @@
 const gameboard = (() => {
-    const board = ['', 'X', 'O', 
-                    'X', 'X', 'O', 
-                    'X', 'O', 'X']
+    const board = ['', '', '', 
+                    '', '', '', 
+                    '', '', '']
 
     function getBoard() {
         return board
@@ -69,12 +69,7 @@ const gameController = (() => {
     function markCell(index, currentPlayerMarker) {
         if (gameboard.getBoard()[index] == '') {
             gameboard.getBoard()[index] = currentPlayerMarker
-            checkGame.row()
-            checkGame.column()
-            checkGame.diagonal()
-            checkGame.tie()
             console.log(currentPlayerMarker + ' marked')
-            switchTurns()
         } else { 
             console.log('Already marked, try again!')
         }
@@ -82,7 +77,11 @@ const gameController = (() => {
     }
 
     function endGame() {
-        console.log(currentPlayerName + " wins")
+        if (winnerStatus == false) {
+            console.log('Nobody wins')
+        } else {
+            console.log(currentPlayerName + " wins")
+        }
         gameboard.resetBoard()
     }
 
@@ -99,7 +98,6 @@ const checkGame = (() => {
             for (let j = i * 3; j < i * 3 + 3; j++) {
                 row.push(boxValue[j])
             }
-            console.log('Row: ' + row)
 
             if (row.every((field) => field === 'X')) {
                 gameController.winnerStatus = true
@@ -121,8 +119,7 @@ const checkGame = (() => {
                 
             for (let j = i; j < i + 7; j += 3) {
                 column.push(boxValue[j])
-            }
-            console.log('Column: ' + column)  
+            } 
             
             if (column.every((field) => field === 'X')) {
                 gameController.winnerStatus = true
@@ -144,7 +141,6 @@ const checkGame = (() => {
             for (let j = i * 2; j < 9; j += 6){
                 diagonal.push(boxValue[j])
             }
-            console.log('Diagonal: ' + diagonal)
 
             if (diagonal.every((field) => field === 'X' && gameboard.copyBoard()[4] === 'X')) {
                 gameController.winnerStatus = true
@@ -162,12 +158,19 @@ const checkGame = (() => {
     function tie() {
         if (gameController.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {
             console.log('Tie')
-        } else if (gameController.winnerStatus = true) {
+        } else if (gameController.winnerStatus === true) {
             console.log('Game Over')
         }
     }
     
-    return {row, column, diagonal, tie}
+    function check() {
+        row()
+        column()
+        diagonal()
+        tie()
+    }
+    
+    return {check}
 })()
 
 let playerOne = player('Isaac', 'X')
@@ -176,12 +179,23 @@ gameController.initialize(playerTwo)
 
 
 const display = (() => {
-    let square = document.getElementById("square")
-    function displayMarker(index) {
-        /* create display element on HTML or through this js method */
-        square.innerText = gameboard.getBoard()[index]
-        console.log(square.innerText)
-    }
-    console.log(square)
-    return {displayMarker}
+    let squares = document.querySelectorAll(".square")
+    let reset = document.getElementById('reset')
+    squares.forEach((square, index) => {
+        square.addEventListener('click', () => {
+            gameController.markCell(index, gameController.getCurrentPlayer().currentPlayerMarker)
+            square.innerText = gameboard.getBoard()[index]
+            checkGame.check()
+            gameController.switchTurns()
+        })
+    })     
+
+    reset.addEventListener('click', () => {
+        gameController.endGame()
+        squares.forEach((square, index) => {
+            square.innerText = gameboard.getBoard()[index]
+        })
+    })
+    
 })()
+
