@@ -47,7 +47,6 @@ const gameController = (() => {
     let currentPlayerMarker;
     let playerOne;
     let playerTwo;
-    //initialize(playerOne)
 
     function initialize(player) {
         currentPlayerName = player.getName()
@@ -60,13 +59,13 @@ const gameController = (() => {
     }
     
     function switchTurns() {
-        if (currentPlayerName == playerOne.getName()) {
-            currentPlayerName = playerTwo.getName()
-            currentPlayerMarker = playerTwo.getMarker()
+        if (currentPlayerName == gameController.playerOne.getName()) {
+            currentPlayerName = gameController.playerTwo.getName()
+            currentPlayerMarker = gameController.playerTwo.getMarker()
             console.log(currentPlayerName + "'s turn")
         } else {
-            currentPlayerName = playerOne.getName()
-            currentPlayerMarker = playerOne.getMarker()
+            currentPlayerName = gameController.playerOne.getName()
+            currentPlayerMarker = gameController.playerOne.getMarker()
             console.log(currentPlayerName + "'s turn")
         }
     }
@@ -82,8 +81,8 @@ const gameController = (() => {
     }
 
     function endGame() {
-        displayLogic.dialog.showModal()
-        if (gameboard.winnerStatus = false) {
+        displayLogic.endDialog.showModal()
+        if (gameboard.winnerStatus === false) {
             displayLogic.announcement.innerHTML = "Tie"
         } else {displayLogic.announcement.innerHTML = currentPlayerName + ' wins'}
     }
@@ -161,6 +160,7 @@ const checkGame = (() => {
     function tie() {
         if (gameboard.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {``
             console.log('Tie')
+            gameController.endGame()
             gameboard.resetBoard()
         }
     }
@@ -181,7 +181,8 @@ const displayLogic = (() => {
     const submit = document.getElementById('submit')
     const playerOneInput = document.getElementById('player-one')
     const playerTwoInput = document.getElementById('player-two')
-    const dialog = document.getElementById('dialog')
+    const formDialog = document.getElementById('form-dialog')
+    const endDialog = document.getElementById('dialog')
         const announcement = document.getElementById('announcement')
         const replay = document.getElementById('replay')
 
@@ -200,16 +201,23 @@ const displayLogic = (() => {
         gameboard.resetBoard()
         squares.forEach((square, index) => {
             square.innerText = gameboard.getBoard()[index]
+            square.disabled = false
         })
+        gameController.initialize(gameController.playerOne)
     })
+
+    window.onload = function() {
+        formDialog.showModal()
+    }
 
     submit.addEventListener('click', (event) => {
         event.preventDefault()
         gameController.playerOne = player(playerOneInput.value, 'O')
         gameController.playerTwo = player(playerTwoInput.value, 'X')
         gameController.initialize(gameController.playerOne)
-        console.log(gameController.playerOne, gameController.playerTwo)
+        console.log('Player One is ' + gameController.playerOne.getName() + ', ' + 'Player Two is ' + gameController.playerTwo.getName())
         console.log(gameController.getCurrentPlayer())
+        formDialog.close()
     })
 
     replay.addEventListener('click', () => {
@@ -219,9 +227,10 @@ const displayLogic = (() => {
             square.disabled = false
         })
         gameController.initialize(gameController.playerOne)
-        dialog.close()
+        endDialog.close()
+        formDialog.showModal()
     })
 
-    return {dialog, announcement}
+    return {endDialog, announcement}
 })()
 
