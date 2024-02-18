@@ -3,6 +3,8 @@ const gameboard = (() => {
                     '', '', '', 
                     '', '', '']
 
+    let winnerStatus = false
+
     function getBoard() {
         return board
     }
@@ -18,7 +20,7 @@ const gameboard = (() => {
         console.log(gameboard.copyBoard())
     }
 
-    return {getBoard, copyBoard, resetBoard}
+    return {getBoard, copyBoard, resetBoard, winnerStatus}
 })()
 
 const player = (name, marker) => {
@@ -42,7 +44,6 @@ const player = (name, marker) => {
 const gameController = (() => {
     let currentPlayerName;
     let currentPlayerMarker;
-    let winnerStatus = false
 
     function initialize(player) {
         currentPlayerName = player.getName()
@@ -77,16 +78,12 @@ const gameController = (() => {
     }
 
     function endGame() {
-        if (winnerStatus = false) {
-            console.log('Nobody wins')
-        } else {
-            console.log(currentPlayerName + " wins")
-        }
+        console.log(currentPlayerName + " wins")
+        gameboard.winnerStatus = false
         gameboard.resetBoard()
-        winnerStatus = false
     }
 
-    return {initialize, getCurrentPlayer, switchTurns, markCell, endGame, winnerStatus}
+    return {initialize, getCurrentPlayer, switchTurns, markCell, endGame}
 })()
 
 const checkGame = (() => {
@@ -101,11 +98,11 @@ const checkGame = (() => {
             }
 
             if (row.every((field) => field === 'X')) {
-                gameController.winnerStatus = true
+                gameboard.winnerStatus = true
                 gameController.endGame()
                 break;
             } else if (row.every((field) => field === 'O')) {
-                gameController.winnerStatus = true
+                gameboard.winnerStatus = true
                 gameController.endGame()
                 break;
             } else 
@@ -123,11 +120,11 @@ const checkGame = (() => {
             } 
             
             if (column.every((field) => field === 'X')) {
-                gameController.winnerStatus = true
+                gameboard.winnerStatus = true
                 gameController.endGame()
                 break;
             } else if (column.every((field) => field === 'O')) {
-                gameController.winnerStatus = true
+                gameboard.winnerStatus = true
                 gameController.endGame()
                 break;
             } else
@@ -147,18 +144,19 @@ const checkGame = (() => {
             diagonalTwo.push(boxValue[i])
         }
         
-        if (diagonalOne.every((field) => field === 'X')) {
-            gameController.winnerStatus = true
+        if (diagonalOne.every((field) => field === 'X') || diagonalTwo.every((field) => field === 'X')) {
+            gameboard.winnerStatus = true
             gameController.endGame()
-        } else if (diagonalOne.every((field) => field === 'O')) {
-            gameController.winnerStatus = true
+        } else if (diagonalOne.every((field) => field === 'O') || diagonalTwo.every((field) => field === 'O')) {
+            gameboard.winnerStatus = true
             gameController.endGame()
         }
     }
 
     function tie() {
-        if (gameController.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {
+        if (gameboard.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {
             console.log('Tie')
+            gameboard.resetBoard()
         }
     }
     
@@ -169,7 +167,7 @@ const checkGame = (() => {
         tie()
     }
     
-    return {check, diagonal}
+    return {check}
 })()
 
 let playerOne = player('Isaac', 'X')
@@ -191,7 +189,8 @@ const display = (() => {
     })     
 
     reset.addEventListener('click', () => {
-        gameController.endGame()
+        console.log('Nobody wins')
+        gameboard.resetBoard()
         squares.forEach((square, index) => {
             square.innerText = gameboard.getBoard()[index]
         })
