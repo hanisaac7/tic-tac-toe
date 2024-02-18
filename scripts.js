@@ -17,6 +17,7 @@ const gameboard = (() => {
         for (let i = 0; i < board.length; i++) {
             board[i] = ''
         }
+
         console.log(gameboard.copyBoard())
     }
 
@@ -44,6 +45,9 @@ const player = (name, marker) => {
 const gameController = (() => {
     let currentPlayerName;
     let currentPlayerMarker;
+    let playerOne;
+    let playerTwo;
+    //initialize(playerOne)
 
     function initialize(player) {
         currentPlayerName = player.getName()
@@ -71,19 +75,20 @@ const gameController = (() => {
         if (gameboard.getBoard()[index] === '') {
             gameboard.getBoard()[index] = currentPlayerMarker
             console.log(currentPlayerMarker + ' marked')
+            console.log(gameboard.copyBoard())
         } else { 
             console.log('Already marked, try again!')
         }
-        console.log(gameboard.copyBoard())
     }
 
     function endGame() {
-        console.log(currentPlayerName + " wins")
-        gameboard.winnerStatus = false
-        gameboard.resetBoard()
+        displayLogic.dialog.showModal()
+        if (gameboard.winnerStatus = false) {
+            displayLogic.announcement.innerHTML = "Tie"
+        } else {displayLogic.announcement.innerHTML = currentPlayerName + ' wins'}
     }
 
-    return {initialize, getCurrentPlayer, switchTurns, markCell, endGame}
+    return {initialize, getCurrentPlayer, switchTurns, markCell, endGame, playerOne, playerTwo}
 })()
 
 const checkGame = (() => {
@@ -154,7 +159,7 @@ const checkGame = (() => {
     }
 
     function tie() {
-        if (gameboard.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {
+        if (gameboard.winnerStatus === false && gameboard.copyBoard().every((field) => field !== '')) {``
             console.log('Tie')
             gameboard.resetBoard()
         }
@@ -170,19 +175,21 @@ const checkGame = (() => {
     return {check}
 })()
 
-let playerOne = player('Isaac', 'X')
-let playerTwo = player('Angela', 'O')
-gameController.initialize(playerTwo)
-
-
-const display = (() => {
-    let squares = document.querySelectorAll(".square")
-    let reset = document.getElementById('reset')
+const displayLogic = (() => {
+    const squares = document.querySelectorAll(".square")
+    const reset = document.getElementById('reset')
+    const submit = document.getElementById('submit')
+    const playerOneInput = document.getElementById('player-one')
+    const playerTwoInput = document.getElementById('player-two')
+    const dialog = document.getElementById('dialog')
+        const announcement = document.getElementById('announcement')
+        const replay = document.getElementById('replay')
 
     squares.forEach((square, index) => {
         square.addEventListener('click', () => {
             gameController.markCell(index, gameController.getCurrentPlayer().currentPlayerMarker)
             square.innerText = gameboard.getBoard()[index]
+            square.disabled = true
             checkGame.check()
             gameController.switchTurns()
         })
@@ -195,6 +202,26 @@ const display = (() => {
             square.innerText = gameboard.getBoard()[index]
         })
     })
-    
+
+    submit.addEventListener('click', (event) => {
+        event.preventDefault()
+        gameController.playerOne = player(playerOneInput.value, 'O')
+        gameController.playerTwo = player(playerTwoInput.value, 'X')
+        gameController.initialize(gameController.playerOne)
+        console.log(gameController.playerOne, gameController.playerTwo)
+        console.log(gameController.getCurrentPlayer())
+    })
+
+    replay.addEventListener('click', () => {
+        gameboard.resetBoard()
+        squares.forEach((square, index) => {
+            square.innerText = gameboard.getBoard()[index]
+            square.disabled = false
+        })
+        gameController.initialize(gameController.playerOne)
+        dialog.close()
+    })
+
+    return {dialog, announcement}
 })()
 

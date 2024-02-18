@@ -10,7 +10,16 @@
 <body>
     <div>
         <h1>Tic-Tac-Toe</h1>
-        <button id='reset'>Reset</button>
+        <div id='display'></div>
+        <form>
+            <p>Player One</p>
+            <label for="player-one">O:</label>
+            <input type="text" id="player-one" name="player-one" placeholder="Isaac">
+            <p>Player Two</p>
+            <label for="player-two">X:</label>
+            <input type="text" id="player-two" name="player-two" placeholder="Angela">
+            <input type="submit" id="submit" name="submit">
+        </form>
         <div>
         <div class="grid">
             <button class="square 0"></button>
@@ -23,6 +32,11 @@
             <button class="square 7"></button>
             <button class="square 8"></button>
         </div>
+        <button id='reset'>Reset</button>
+        <dialog id="dialog">
+            <div id="announcement">sdcfdszf</div>
+            <button id="replay">Play Again</button>
+        </dialog>
     </div>
 </body>
 </html>
