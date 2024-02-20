@@ -1,7 +1,5 @@
 const gameboard = (() => {
-    const board = ['', '', '', 
-                    '', '', '', 
-                    '', '', '']
+    const board = ['', '', '', '', '', '', '', '', '']
 
     let winnerStatus = false
 
@@ -17,7 +15,6 @@ const gameboard = (() => {
         for (let i = 0; i < board.length; i++) {
             board[i] = ''
         }
-
         console.log(gameboard.copyBoard())
     }
 
@@ -211,13 +208,16 @@ const displayLogic = (() => {
     }
 
     submit.addEventListener('click', (event) => {
-        event.preventDefault()
-        gameController.playerOne = player(playerOneInput.value, 'O')
-        gameController.playerTwo = player(playerTwoInput.value, 'X')
-        gameController.initialize(gameController.playerOne)
-        console.log('Player One is ' + gameController.playerOne.getName() + ', ' + 'Player Two is ' + gameController.playerTwo.getName())
-        console.log(gameController.getCurrentPlayer())
-        formDialog.close()
+        //without trim, the if condition does not work properly
+        if (playerOneInput.value.trim() !== '' && playerTwoInput.value.trim() !== '') {
+            event.preventDefault()
+            gameController.playerOne = player(playerOneInput.value, 'O')
+            gameController.playerTwo = player(playerTwoInput.value, 'X')
+            gameController.initialize(gameController.playerOne)
+            console.log('Player One is ' + gameController.playerOne.getName() + ', ' + 'Player Two is ' + gameController.playerTwo.getName())
+            console.log(gameController.getCurrentPlayer())
+            formDialog.close()
+        }
     })
 
     replay.addEventListener('click', () => {
